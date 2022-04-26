@@ -1,0 +1,15 @@
+﻿{
+  "Name": "FishAlmanac",
+  "Author": "Tny5989",
+  "Version": "0.0.1",
+  "Description": "A modification that helps players identify which fish are catchable on the current day.",
+  "UniqueID": "Tny5989.FishAlmanac",
+  "EntryDll": "FishAlmanac.dll",
+  "MinimumApiVersion": "3.8.0",
+  "UpdateKeys": [],
+  "Dependencies": [
+    {
+      "UniqueID": "Tny5989.FishAlmanacContentPatch",
+      "IsRequired": true
+    }]
+}

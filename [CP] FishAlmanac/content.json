@@ -1,0 +1,18 @@
+﻿{
+  "Format": "1.25.0",
+  "Changes": [
+    {
+      "Action": "EditMap",
+      "Target": "Maps/FarmHouse",
+      "MapTiles": [
+        {
+          "Position": {"X":  10, "Y": 3},
+          "Layer": "Buildings",
+          "SetProperties": {
+            "Action": "FishAlmanac"
+          }
+        }
+      ]
+    }
+  ]
+}

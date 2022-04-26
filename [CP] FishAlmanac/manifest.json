@@ -1,0 +1,11 @@
+﻿{
+  "Name": "FishAlmanacContentPatch",
+  "Author": "Tny5989",
+  "Version": "0.0.1",
+  "Description": "Content Patch for FishAlmanac.",
+  "UniqueID": "Tny5989.FishAlmanacContentPatch",
+  "UpdateKeys": [],
+  "ContentPackFor": {
+    "UniqueID": "Pathoschild.ContentPatcher"
+  }
+}
