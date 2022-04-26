@@ -27,5 +27,27 @@ namespace FishAlmanac.Util
 
             return bundles;
         }
+
+        //==============================================================================
+        public static (bool, bool) ItemBundleStatus(int itemId, Dictionary<int, Bundle> bundles)
+        {
+            var inBundle = false;
+            var bundleComplete = true;
+            foreach (var (_, value) in bundles)
+            {
+                for (var i = 0; i < value.RequiredItems.Count; ++i)
+                {
+                    if (value.RequiredItems[i] != itemId)
+                    {
+                        continue;
+                    }
+
+                    inBundle = true;
+                    bundleComplete = bundleComplete && value.CompleteItems[i];
+                }
+            }
+
+            return (inBundle, bundleComplete);
+        }
     }
 }

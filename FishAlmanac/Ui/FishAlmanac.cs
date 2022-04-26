@@ -107,27 +107,14 @@ namespace FishAlmanac.Ui
         {
             foreach (var (fish, locations) in data)
             {
-                var inBundle = false;
-                var bundleComplete = true;
-                foreach (var (_, value) in bundles)
+                if (locations.Count <= 0)
                 {
-                    for (var i = 0; i < value.RequiredItems.Count; ++i)
-                    {
-                        if (value.RequiredItems[i] != fish.Id)
-                        {
-                            continue;
-                        }
-
-                        inBundle = true;
-                        bundleComplete = bundleComplete && value.CompleteItems[i];
-                    }
+                    continue;
                 }
 
-                if (locations.Count > 0)
-                {
-                    Display.Cards.Add(new FishCard(Monitor, fish, locations, ShipUtils.HasShippedItem(fish.Id),
-                        inBundle, inBundle && bundleComplete));
-                }
+                var (inBundle, bundleComplete) = BundleUtils.ItemBundleStatus(fish.Id, bundles);
+                Display.Cards.Add(new FishCard(Monitor, fish, locations, ShipUtils.HasShippedItem(fish.Id),
+                    inBundle, inBundle && bundleComplete));
             }
         }
 
