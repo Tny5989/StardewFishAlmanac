@@ -11,4 +11,3 @@ TODO:
 * Separate update and drawing in ui classes
   * Make better ui classes in general
 * Make a prettier ui (???)
-* Better gamepad support
