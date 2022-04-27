@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
@@ -82,6 +83,12 @@ namespace FishAlmanac.Ui.Components
             {
                 Cards[Index].HandleLeftClick(x, y);
             }
+        }
+
+        //==============================================================================
+        public void HandleGamepadInput(InputButtons button)
+        {
+            NavBar.HandleGamepadInput(button);
         }
 
         //==============================================================================

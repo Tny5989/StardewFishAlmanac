@@ -4,6 +4,7 @@ using FishAlmanac.Ui.Components.Buttons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
+using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
@@ -84,6 +85,21 @@ namespace FishAlmanac.Ui.Components
         {
             PreviousButton.HandleLeftClick(x, y);
             NextButton.HandleLeftClick(x, y);
+        }
+
+        //==============================================================================
+        public void HandleGamepadInput(InputButtons button)
+        {
+            var left = (button & InputButtons.LeftTrigger) == InputButtons.LeftTrigger;
+            var right = (button & InputButtons.RightTrigger) == InputButtons.RightTrigger;
+            if (left)
+            {
+                PreviousButton.HandleLeftClick(PreviousButton.Bounds.X, PreviousButton.Bounds.Y);
+            }
+            if (right)
+            {
+                NextButton.HandleLeftClick(NextButton.Bounds.X, NextButton.Bounds.Y);
+            }
         }
 
         //==============================================================================

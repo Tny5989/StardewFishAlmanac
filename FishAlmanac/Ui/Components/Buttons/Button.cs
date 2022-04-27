@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
+using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components.Buttons
 {
@@ -57,6 +58,12 @@ namespace FishAlmanac.Ui.Components.Buttons
             {
                 observer.OnNext(this);
             }
+        }
+        
+        //==============================================================================
+        public virtual void HandleGamepadInput(InputButtons button)
+        {
+            
         }
 
         //==============================================================================

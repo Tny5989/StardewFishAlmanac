@@ -23,17 +23,19 @@ namespace FishAlmanac
                 return;
             }
 
-            if (args.Button != SButton.ControllerA && args.Button != SButton.MouseRight)
-            {
-                return;
-            }
-
             if (!args.IsDown(args.Button))
             {
                 return;
             }
 
-            HandleAction(GetTileAction(args.Cursor.GrabTile));
+            if (args.Button is SButton.ControllerA)
+            {
+                HandleAction(GetTileAction(Game1.player.GetGrabTile()));
+            }
+            else if (args.Button is SButton.MouseRight)
+            {
+                HandleAction(GetTileAction(GetCursorGrabTile()));
+            }
         }
 
         //==============================================================================
@@ -51,8 +53,13 @@ namespace FishAlmanac
         }
 
         //==============================================================================
-        private static PropertyValue GetTileAction(Vector2 pos)
+        private PropertyValue GetTileAction(Vector2 pos)
         {
+            if (!Utility.tileWithinRadiusOfPlayer((int)pos.X, (int)pos.Y, 1, Game1.player))
+            {
+                return null;
+            }
+            
             var loc = new Location((int)pos.X * Game1.tileSize, (int)pos.Y * Game1.tileSize);
             var tile = Game1.currentLocation.map.GetLayer("Buildings").PickTile(loc, Game1.viewport.Size);
             if (tile == null)
@@ -62,6 +69,13 @@ namespace FishAlmanac
 
             tile.Properties.TryGetValue("Action", out var action);
             return action;
+        }
+
+        //==============================================================================
+        private static Vector2 GetCursorGrabTile()
+        {
+            return new Vector2((float)(Game1.getOldMouseX() + Game1.viewport.X),
+                (float)(Game1.getOldMouseY() + Game1.viewport.Y)) / Game1.tileSize;
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
@@ -61,6 +62,11 @@ namespace FishAlmanac.Ui.Components
         {
         }
 
+        //==============================================================================
+        public void HandleGamepadInput(InputButtons button)
+        {
+        }
+
 
         //==============================================================================
         private void CreateLabels(IEnumerable<string> items)
@@ -73,6 +79,7 @@ namespace FishAlmanac.Ui.Components
                 maxDim.Y = Math.Max(maxDim.Y, dim.Y);
                 Items.Add(new Label(Monitor) { Text = str });
             }
+
             MaxDimensions = maxDim;
         }
 
@@ -87,7 +94,7 @@ namespace FishAlmanac.Ui.Components
                 Items[i].Bounds = new Rectangle()
                 {
                     X = Bounds.X + (int)(Bounds.Width - maxWidth) / 2,
-                    Y= Bounds.Y + 10 + (int)(MaxDimensions.Y * i),
+                    Y = Bounds.Y + 10 + (int)(MaxDimensions.Y * i),
                     Width = (int)maxWidth,
                     Height = (int)MaxDimensions.Y
                 };

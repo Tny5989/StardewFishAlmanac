@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
@@ -27,7 +28,7 @@ namespace FishAlmanac.Ui.Components
 
         //==============================================================================
         public bool Checked { get; set; }
-        
+
         //==============================================================================
         public bool Disabled { get; set; }
 
@@ -66,6 +67,11 @@ namespace FishAlmanac.Ui.Components
 
         //==============================================================================
         public void HandleLeftClick(int x, int y)
+        {
+        }
+
+        //==============================================================================
+        public void HandleGamepadInput(InputButtons button)
         {
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
+using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components.Cards
 {
@@ -10,10 +11,10 @@ namespace FishAlmanac.Ui.Components.Cards
     {
         //==============================================================================
         public Rectangle Bounds { get; set; }
-        
+
         //==============================================================================
         public Color Color { get; set; }
-        
+
         //==============================================================================
         public IMonitor Monitor { get; set; }
 
@@ -29,7 +30,7 @@ namespace FishAlmanac.Ui.Components.Cards
             Monitor = monitor;
             Observers = new List<IObserver<string>>();
         }
-        
+
         //==============================================================================
         public abstract void Draw(SpriteBatch b);
 
@@ -40,6 +41,11 @@ namespace FishAlmanac.Ui.Components.Cards
 
         //==============================================================================
         public virtual void HandleLeftClick(int x, int y)
+        {
+        }
+
+        //==============================================================================
+        public virtual void HandleGamepadInput(InputButtons button)
         {
         }
 

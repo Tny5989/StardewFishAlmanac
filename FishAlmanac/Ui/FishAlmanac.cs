@@ -52,7 +52,9 @@ namespace FishAlmanac.Ui
             if (b == Buttons.B)
             {
                 exitThisMenu();
+                return;
             }
+            Display.HandleGamepadInput(b);
         }
 
         //==============================================================================
