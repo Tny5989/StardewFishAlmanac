@@ -129,8 +129,9 @@ namespace FishAlmanac.Ui
             xPositionOnScreen = (Game1.uiViewport.Width - width) / 2;
             yPositionOnScreen = (Game1.uiViewport.Height - height) / 2;
 
-            Background.Bounds = new Rectangle(xPositionOnScreen, yPositionOnScreen, width, height);
-            Display.Bounds = new Rectangle(xPositionOnScreen, yPositionOnScreen, width, height);
+            var bounds = new Rectangle(xPositionOnScreen, yPositionOnScreen, width, height);
+            Background.Update(bounds);
+            Display.Update(bounds);
         }
     }
 }

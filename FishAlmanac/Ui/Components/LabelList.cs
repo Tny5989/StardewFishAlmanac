@@ -24,6 +24,9 @@ namespace FishAlmanac.Ui.Components
 
         //==============================================================================
         private Vector2 MaxDimensions { get; set; }
+        
+        //==============================================================================
+        private bool Valid { get; set; }
 
 
         //==============================================================================
@@ -41,7 +44,7 @@ namespace FishAlmanac.Ui.Components
         //==============================================================================
         public void Draw(SpriteBatch b)
         {
-            if (!PositionLabels())
+            if (!Valid)
             {
                 return;
             }
@@ -50,6 +53,13 @@ namespace FishAlmanac.Ui.Components
             {
                 item.Draw(b);
             }
+        }
+
+        //==============================================================================
+        public void Update(Rectangle bounds)
+        {
+            Bounds = bounds;
+            Valid = PositionLabels();
         }
 
         //==============================================================================
@@ -91,13 +101,13 @@ namespace FishAlmanac.Ui.Components
 
             for (var i = 0; i < Items.Count; ++i)
             {
-                Items[i].Bounds = new Rectangle()
+                Items[i].Update(new Rectangle()
                 {
                     X = Bounds.X + (int)(Bounds.Width - maxWidth) / 2,
                     Y = Bounds.Y + 10 + (int)(MaxDimensions.Y * i),
                     Width = (int)maxWidth,
                     Height = (int)MaxDimensions.Y
-                };
+                });
             }
 
             if (maxRows >= Items.Count)

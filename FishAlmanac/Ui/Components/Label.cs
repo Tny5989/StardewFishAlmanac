@@ -31,6 +31,9 @@ namespace FishAlmanac.Ui.Components
 
         //==============================================================================
         private string AdjustedText { get; set; }
+        
+        //==============================================================================
+        private Vector2 TextPosition { get; set; }
 
 
         //==============================================================================
@@ -43,22 +46,29 @@ namespace FishAlmanac.Ui.Components
             Bold = false;
             Alignment = Alignment.Left;
             Font = Game1.smallFont;
+            TextPosition = new Vector2();
         }
 
         //==============================================================================
         public void Draw(SpriteBatch b)
         {
-            AdjustedText ??= GetText();
-            var textPosition = GetTextPosition(Font.MeasureString(AdjustedText));
             if (Bold)
             {
-                Utility.drawBoldText(b, AdjustedText, Font, textPosition, Color);
+                Utility.drawBoldText(b, AdjustedText, Font, TextPosition, Color);
             }
             else
             {
-                b.DrawString(Font, AdjustedText, textPosition, Color, 0f, Vector2.Zero, 1f,
+                b.DrawString(Font, AdjustedText, TextPosition, Color, 0f, Vector2.Zero, 1f,
                     SpriteEffects.None, 1f);
             }
+        }
+        
+        //==============================================================================
+        public void Update(Rectangle bounds)
+        {
+            Bounds = bounds;
+            AdjustedText = GetText();
+            TextPosition = GetTextPosition(Font.MeasureString(AdjustedText));
         }
 
         //==============================================================================

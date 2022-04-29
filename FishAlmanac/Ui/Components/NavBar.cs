@@ -54,7 +54,6 @@ namespace FishAlmanac.Ui.Components
         //==============================================================================
         public void Draw(SpriteBatch b)
         {
-            PositionNavButtons();
             if (ShowPrevious)
             {
                 PreviousButton.Draw(b);
@@ -64,6 +63,13 @@ namespace FishAlmanac.Ui.Components
             {
                 NextButton.Draw(b);
             }
+        }
+
+        //==============================================================================
+        public void Update(Rectangle bounds)
+        {
+            Bounds = bounds;
+            PositionNavButtons();
         }
 
         //==============================================================================
@@ -96,6 +102,7 @@ namespace FishAlmanac.Ui.Components
             {
                 PreviousButton.HandleLeftClick(PreviousButton.Bounds.X, PreviousButton.Bounds.Y);
             }
+
             if (right)
             {
                 NextButton.HandleLeftClick(NextButton.Bounds.X, NextButton.Bounds.Y);
@@ -161,9 +168,9 @@ namespace FishAlmanac.Ui.Components
                 {
                     var x = Bounds.X + 10;
                     var y = Bounds.Y + 10;
-                    PreviousButton.Bounds = new Rectangle(x, y, Bounds.Width - 20, Bounds.Width - 20);
+                    PreviousButton.Update(new Rectangle(x, y, Bounds.Width - 20, Bounds.Width - 20));
                     y = Bounds.Y + Bounds.Height - 10 - (Bounds.Width - 20);
-                    NextButton.Bounds = new Rectangle(x, y, Bounds.Width - 20, Bounds.Width - 20);
+                    NextButton.Update(new Rectangle(x, y, Bounds.Width - 20, Bounds.Width - 20));
                     break;
                 }
                 case Orientation.Horizontal:
@@ -171,9 +178,9 @@ namespace FishAlmanac.Ui.Components
                 {
                     var x = Bounds.X + 10;
                     var y = Bounds.Y + 10;
-                    PreviousButton.Bounds = new Rectangle(x, y, Bounds.Height - 20, Bounds.Height - 20);
+                    PreviousButton.Update(new Rectangle(x, y, Bounds.Height - 20, Bounds.Height - 20));
                     x = Bounds.X + Bounds.Width - 10 - (Bounds.Height - 20);
-                    NextButton.Bounds = new Rectangle(x, y, Bounds.Height - 20, Bounds.Height - 20);
+                    NextButton.Update(new Rectangle(x, y, Bounds.Height - 20, Bounds.Height - 20));
                     break;
                 }
             }

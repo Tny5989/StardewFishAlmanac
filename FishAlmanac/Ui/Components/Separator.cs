@@ -42,6 +42,12 @@ namespace FishAlmanac.Ui.Components
         {
             b.Draw(Texture, Bounds, Color);
         }
+        
+        //==============================================================================
+        public void Update(Rectangle bounds)
+        {
+            Bounds = bounds;
+        }
 
         //==============================================================================
         public void HandleScrollWheel(int direction)

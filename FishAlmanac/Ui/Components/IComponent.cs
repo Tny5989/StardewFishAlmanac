@@ -19,6 +19,9 @@ namespace FishAlmanac.Ui.Components
 
         //==============================================================================
         public void Draw(SpriteBatch b);
+        
+        //==============================================================================
+        public void Update(Rectangle bounds);
 
         //==============================================================================
         public void HandleScrollWheel(int direction);

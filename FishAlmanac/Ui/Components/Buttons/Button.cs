@@ -37,7 +37,12 @@ namespace FishAlmanac.Ui.Components.Buttons
 
         //==============================================================================
         public abstract void Draw(SpriteBatch b);
-
+        
+        //==============================================================================
+        public virtual void Update(Rectangle bounds)
+        {
+            Bounds = bounds;
+        }
 
         //==============================================================================
         public virtual void HandleScrollWheel(int direction)

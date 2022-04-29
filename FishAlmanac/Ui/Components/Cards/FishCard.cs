@@ -20,7 +20,7 @@ namespace FishAlmanac.Ui.Components.Cards
 
         //==============================================================================
         private Label FishTime { get; set; }
-        
+
         //==============================================================================
         private Label FishWeather { get; set; }
 
@@ -63,16 +63,6 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         public override void Draw(SpriteBatch b)
         {
-            PositionPortrait();
-            PositionFishName();
-            PositionFishTime();
-            PositionFishWeather();
-            PositionShippedBox();
-            PositionBundledBox();
-            PositionLocationsTitle();
-            PositionLocationsTitleSeparator();
-            PositionFishLocations();
-            PositionSeparator();
             Portrait.Draw(b);
             FishName.Draw(b);
             FishTime.Draw(b);
@@ -86,131 +76,148 @@ namespace FishAlmanac.Ui.Components.Cards
         }
 
         //==============================================================================
+        public override void Update(Rectangle bounds)
+        {
+            base.Update(bounds);
+
+            PositionPortrait();
+            PositionFishName();
+            PositionFishTime();
+            PositionFishWeather();
+            PositionShippedBox();
+            PositionBundledBox();
+            PositionLocationsTitle();
+            PositionLocationsTitleSeparator();
+            PositionFishLocations();
+            PositionSeparator();
+        }
+
+        //==============================================================================
         private void PositionPortrait()
         {
             var nameSize = FishName.Font.MeasureString(FishName.Text);
             var timeSize = FishTime.Font.MeasureString(FishTime.Text);
             var weatherSize = FishWeather.Font.MeasureString(FishWeather.Text);
             var combinedHeight = (int)(nameSize.Y + timeSize.Y + weatherSize.Y + 64);
-            Portrait.Bounds = new Rectangle()
+            Portrait.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - 32,
                 Y = Bounds.Y + (Bounds.Height - combinedHeight) / 2,
                 Width = 64,
                 Height = 64
-            };
+            });
         }
 
         //==============================================================================
         private void PositionFishName()
         {
             var size = FishName.Font.MeasureString(FishName.Text);
-            FishName.Bounds = new Rectangle()
+            FishName.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - (int)size.X / 2,
                 Y = Portrait.Bounds.Bottom + 1,
                 Width = (int)size.X,
                 Height = (int)size.Y
-            };
+            });
         }
 
         //==============================================================================
         private void PositionFishTime()
         {
             var size = FishTime.Font.MeasureString(FishTime.Text);
-            FishTime.Bounds = new Rectangle()
+            FishTime.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - (int)size.X / 2,
                 Y = FishName.Bounds.Bottom + 1,
                 Width = (int)size.X,
                 Height = (int)size.Y
-            };
+            });
         }
-        
+
         //==============================================================================
         private void PositionFishWeather()
         {
             var size = FishWeather.Font.MeasureString(FishWeather.Text);
-            FishWeather.Bounds = new Rectangle()
+            FishWeather.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - (int)size.X / 2,
                 Y = FishTime.Bounds.Bottom + 1,
                 Width = (int)size.X,
                 Height = (int)size.Y
-            };
+            });
         }
 
         //==============================================================================
         private void PositionLocationsTitle()
         {
             var size = LocationsTitle.Font.MeasureString(LocationsTitle.Text);
-            LocationsTitle.Bounds = new Rectangle()
+            LocationsTitle.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 2,
                 Y = Bounds.Y + 10,
                 Width = Bounds.Width / 2,
                 Height = (int)size.Y
-            };
+            });
         }
 
         //==============================================================================
         private void PositionLocationsTitleSeparator()
         {
-            LocationsTitleSeparator.Bounds = new Rectangle()
+            LocationsTitleSeparator.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 2 + 10,
                 Y = LocationsTitle.Bounds.Bottom + 1,
                 Width = Bounds.Width / 2 - 20,
                 Height = 1
-            };
+            });
         }
 
         //==============================================================================
         private void PositionFishLocations()
         {
-            FishLocations.Bounds = new Rectangle()
+            FishLocations.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 2,
                 Y = LocationsTitleSeparator.Bounds.Bottom + 1,
                 Width = Bounds.Width / 2,
                 Height = (Bounds.Y + Bounds.Height) - LocationsTitleSeparator.Bounds.Bottom - 1
-            };
+            });
         }
 
         //==============================================================================
         private void PositionSeparator()
         {
-            Separator.Bounds = new Rectangle()
+            Separator.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 2,
                 Y = Bounds.Y + 10,
                 Width = 1,
                 Height = Bounds.Height - 20
-            };
+            });
         }
 
         //==============================================================================
         private void PositionShippedBox()
         {
-            ShippedBox.Bounds = new Rectangle()
+            ShippedBox.Update(new Rectangle()
             {
                 X = Bounds.X,
                 Y = FishWeather.Bounds.Bottom + 1,
                 Width = Bounds.Width / 4,
                 Height = Bounds.Bottom - FishWeather.Bounds.Bottom - 1
-            };
+            });
         }
 
         //==============================================================================
         private void PositionBundledBox()
         {
-            BundledBox.Bounds = new Rectangle()
+            BundledBox.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4,
                 Y = FishWeather.Bounds.Bottom + 1,
                 Width = Bounds.Width / 4,
                 Height = Bounds.Bottom - FishWeather.Bounds.Bottom - 1
-            };
+            });
         }
 
         //==============================================================================
@@ -244,6 +251,7 @@ namespace FishAlmanac.Ui.Components.Cards
             {
                 return "Sun or Rain";
             }
+
             return uniqueWeathers.Contains(WeatherType.Rain) ? "Rain Only" : "Sun Only";
         }
     }

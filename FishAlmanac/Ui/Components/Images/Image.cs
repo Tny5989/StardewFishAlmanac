@@ -8,13 +8,19 @@ namespace FishAlmanac.Ui.Components.Images
     public abstract class Image : IComponent
     {
         //==============================================================================
+        private Rectangle SrcRectangle { get; set; }
+
+        //==============================================================================
         public Rectangle Bounds { get; set; }
 
         //==============================================================================
         public Color Color { get; set; }
-        
+
         //==============================================================================
         public IMonitor Monitor { get; set; }
+
+        //==============================================================================
+        private Texture2D Texture { get; set; }
 
 
         //==============================================================================
@@ -23,12 +29,21 @@ namespace FishAlmanac.Ui.Components.Images
             Bounds = new Rectangle();
             Color = Color.White;
             Monitor = monitor;
+            SrcRectangle = new Rectangle();
         }
 
         //==============================================================================
         public void Draw(SpriteBatch b)
         {
-            b.Draw(GetTexture(), Bounds, GetSourceRectangle(), Color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            b.Draw(Texture, Bounds, SrcRectangle, Color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+        }
+
+        //==============================================================================
+        public void Update(Rectangle bounds)
+        {
+            Bounds = bounds;
+            SrcRectangle = GetSourceRectangle();
+            Texture = GetTexture();
         }
 
         //==============================================================================
@@ -40,7 +55,7 @@ namespace FishAlmanac.Ui.Components.Images
         public virtual void HandleLeftClick(int x, int y)
         {
         }
-        
+
         //==============================================================================
         public virtual void HandleGamepadInput(InputButtons button)
         {

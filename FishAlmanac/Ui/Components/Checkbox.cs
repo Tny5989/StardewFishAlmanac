@@ -35,6 +35,12 @@ namespace FishAlmanac.Ui.Components
         //==============================================================================
         private Label Text { get; set; }
 
+        //==============================================================================
+        private Rectangle DstRectangle { get; set; }
+
+        //==============================================================================
+        private Rectangle SrcRectangle { get; set; }
+
 
         //==============================================================================
         public Checkbox(IMonitor monitor, string text)
@@ -44,20 +50,30 @@ namespace FishAlmanac.Ui.Components
             Monitor = monitor;
             Checked = false;
             Text = new Label(Monitor) { Text = text };
+            DstRectangle = new Rectangle();
+            SrcRectangle = new Rectangle();
         }
 
         //==============================================================================
         public void Draw(SpriteBatch b)
         {
+            b.Draw(Texture, DstRectangle, SrcRectangle, Color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            Text.Draw(b);
+        }
+
+        //==============================================================================
+        public void Update(Rectangle bounds)
+        {
+            Bounds = bounds;
+
             Color = Disabled ? new Color(255, 255, 255, 100) : Color.White;
             Text.Color = Disabled ? new Color(0, 0, 0, 100) : Color.Black;
 
             var textSize = Text.Font.MeasureString(Text.Text);
-            b.Draw(Texture, GetDestinationRectangle(textSize), GetSourceRectangle(),
-                Color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            DstRectangle = GetDestinationRectangle(textSize);
+            SrcRectangle = GetSourceRectangle();
 
             PositionText(textSize);
-            Text.Draw(b);
         }
 
         //==============================================================================
@@ -90,14 +106,13 @@ namespace FishAlmanac.Ui.Components
         //==============================================================================
         private void PositionText(Vector2 textSize)
         {
-            var boxBounds = GetDestinationRectangle(textSize);
-            Text.Bounds = new Rectangle()
+            Text.Update(new Rectangle()
             {
-                X = boxBounds.Right + 10,
-                Y = boxBounds.Top + (boxBounds.Height - (int)textSize.Y) / 2,
+                X = DstRectangle.Right + 10,
+                Y = DstRectangle.Top + (DstRectangle.Height - (int)textSize.Y) / 2,
                 Width = (int)textSize.X,
                 Height = (int)textSize.Y
-            };
+            });
         }
 
         //==============================================================================

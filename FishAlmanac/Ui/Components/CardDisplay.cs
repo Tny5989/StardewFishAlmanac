@@ -50,10 +50,6 @@ namespace FishAlmanac.Ui.Components
         //==============================================================================
         public void Draw(SpriteBatch b)
         {
-            PositionNavBar();
-            PositionSeparator();
-            PositionCards();
-
             UpdateNavBar();
 
             if (Cards.Count > 0)
@@ -63,6 +59,16 @@ namespace FishAlmanac.Ui.Components
 
             Separator.Draw(b);
             NavBar.Draw(b);
+        }
+
+        //==============================================================================
+        public void Update(Rectangle bounds)
+        {
+            Bounds = bounds;
+
+            PositionNavBar();
+            PositionSeparator();
+            PositionCards();
         }
 
         //==============================================================================
@@ -110,15 +116,15 @@ namespace FishAlmanac.Ui.Components
         //==============================================================================
         private void PositionNavBar()
         {
-            NavBar.Bounds = new Rectangle(Bounds.X, Bounds.Y + Bounds.Height - Game1.tileSize, Bounds.Width,
-                Game1.tileSize);
+            NavBar.Update(new Rectangle(Bounds.X, Bounds.Y + Bounds.Height - Game1.tileSize, Bounds.Width,
+                Game1.tileSize));
         }
 
         //==============================================================================
         private void PositionSeparator()
         {
-            Separator.Bounds = new Rectangle(Bounds.X + 10, Bounds.Y + Bounds.Height - Game1.tileSize - 1,
-                Bounds.Width - 20, 1);
+            Separator.Update(new Rectangle(Bounds.X + 10, Bounds.Y + Bounds.Height - Game1.tileSize - 1,
+                Bounds.Width - 20, 1));
         }
 
         //==============================================================================
@@ -126,7 +132,7 @@ namespace FishAlmanac.Ui.Components
         {
             foreach (var card in Cards)
             {
-                card.Bounds = new Rectangle(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height - Game1.tileSize);
+                card.Update(new Rectangle(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height - Game1.tileSize));
             }
         }
 
