@@ -20,6 +20,9 @@ namespace FishAlmanac.Ui.Components.Cards
 
         //==============================================================================
         private Label FishTime { get; set; }
+        
+        //==============================================================================
+        private Label FishWeather { get; set; }
 
         //==============================================================================
         private Label LocationsTitle { get; set; }
@@ -47,6 +50,7 @@ namespace FishAlmanac.Ui.Components.Cards
             Portrait = new FishImage(Monitor) { FishId = fish.Id };
             FishName = new Label(Monitor) { Text = fish.Name };
             FishTime = new Label(Monitor) { Text = FormatTime(fish.StartTime, fish.StopTime) };
+            FishWeather = new Label(Monitor) { Text = FormatWeather(fish.Weathers) };
             LocationsTitle = new Label(Monitor)
                 { Text = "Sightings", Alignment = Alignment.Center };
             LocationsTitleSeparator = new Separator(Monitor);
@@ -62,6 +66,7 @@ namespace FishAlmanac.Ui.Components.Cards
             PositionPortrait();
             PositionFishName();
             PositionFishTime();
+            PositionFishWeather();
             PositionShippedBox();
             PositionBundledBox();
             PositionLocationsTitle();
@@ -71,6 +76,7 @@ namespace FishAlmanac.Ui.Components.Cards
             Portrait.Draw(b);
             FishName.Draw(b);
             FishTime.Draw(b);
+            FishWeather.Draw(b);
             ShippedBox.Draw(b);
             BundledBox.Draw(b);
             LocationsTitle.Draw(b);
@@ -84,7 +90,8 @@ namespace FishAlmanac.Ui.Components.Cards
         {
             var nameSize = FishName.Font.MeasureString(FishName.Text);
             var timeSize = FishTime.Font.MeasureString(FishTime.Text);
-            var combinedHeight = (int)(nameSize.Y + timeSize.Y + 64);
+            var weatherSize = FishWeather.Font.MeasureString(FishWeather.Text);
+            var combinedHeight = (int)(nameSize.Y + timeSize.Y + weatherSize.Y + 64);
             Portrait.Bounds = new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - 32,
@@ -115,6 +122,19 @@ namespace FishAlmanac.Ui.Components.Cards
             {
                 X = Bounds.X + Bounds.Width / 4 - (int)size.X / 2,
                 Y = FishName.Bounds.Bottom + 1,
+                Width = (int)size.X,
+                Height = (int)size.Y
+            };
+        }
+        
+        //==============================================================================
+        private void PositionFishWeather()
+        {
+            var size = FishWeather.Font.MeasureString(FishWeather.Text);
+            FishWeather.Bounds = new Rectangle()
+            {
+                X = Bounds.X + Bounds.Width / 4 - (int)size.X / 2,
+                Y = FishTime.Bounds.Bottom + 1,
                 Width = (int)size.X,
                 Height = (int)size.Y
             };
@@ -175,9 +195,9 @@ namespace FishAlmanac.Ui.Components.Cards
             ShippedBox.Bounds = new Rectangle()
             {
                 X = Bounds.X,
-                Y = FishTime.Bounds.Bottom + 1,
+                Y = FishWeather.Bounds.Bottom + 1,
                 Width = Bounds.Width / 4,
-                Height = Bounds.Bottom - FishTime.Bounds.Bottom - 1
+                Height = Bounds.Bottom - FishWeather.Bounds.Bottom - 1
             };
         }
 
@@ -187,9 +207,9 @@ namespace FishAlmanac.Ui.Components.Cards
             BundledBox.Bounds = new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4,
-                Y = FishTime.Bounds.Bottom + 1,
+                Y = FishWeather.Bounds.Bottom + 1,
                 Width = Bounds.Width / 4,
-                Height = Bounds.Bottom - FishTime.Bounds.Bottom - 1
+                Height = Bounds.Bottom - FishWeather.Bounds.Bottom - 1
             };
         }
 
@@ -199,6 +219,32 @@ namespace FishAlmanac.Ui.Components.Cards
             var startDate = new DateTime(DateTime.Now.Year, 1, 1, start / 100, 0, 0);
             var stopDate = new DateTime(DateTime.Now.Year, 1, 1, end / 100, 0, 0);
             return $"{startDate:hh:mm tt} - {stopDate:hh:mm tt}";
+        }
+
+        //==============================================================================
+        private static string FormatWeather(List<WeatherType> weathers)
+        {
+            var uniqueWeathers = new HashSet<WeatherType>();
+            foreach (var weather in weathers)
+            {
+                switch (weather)
+                {
+                    case WeatherType.Rain:
+                    case WeatherType.Snow:
+                    case WeatherType.Storm:
+                        uniqueWeathers.Add(WeatherType.Rain);
+                        break;
+                    default:
+                        uniqueWeathers.Add(WeatherType.Sun);
+                        break;
+                }
+            }
+
+            if (uniqueWeathers.Count > 1)
+            {
+                return "Sun or Rain";
+            }
+            return uniqueWeathers.Contains(WeatherType.Rain) ? "Rain Only" : "Sun Only";
         }
     }
 }
