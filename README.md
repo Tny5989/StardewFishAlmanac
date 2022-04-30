@@ -9,6 +9,4 @@ TODO:
 * Move action tile to the docks
 * Find/Create art for the action tile
 * Find a way to avoid spoiling locations
-* Separate update and drawing in ui classes
-  * Make better ui classes in general
 * Make a prettier ui (???)
