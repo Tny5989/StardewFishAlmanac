@@ -5,7 +5,6 @@ using FishAlmanac.GameData;
 using FishAlmanac.Ui.Components.Images;
 using FishAlmanac.Util;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 
 namespace FishAlmanac.Ui.Components.Cards
@@ -13,73 +12,40 @@ namespace FishAlmanac.Ui.Components.Cards
     public class FishCard : Card
     {
         //==============================================================================
-        private FishImage Portrait { get; set; }
-
-        //==============================================================================
-        private Label FishName { get; set; }
-
-        //==============================================================================
-        private Label FishTime { get; set; }
-
-        //==============================================================================
-        private Label FishWeather { get; set; }
-
-        //==============================================================================
-        private Label LocationsTitle { get; set; }
-
-        //==============================================================================
-        private Separator LocationsTitleSeparator { get; set; }
-
-        //==============================================================================
-        private LabelList FishLocations { get; set; }
-
-        //==============================================================================
-        private Separator Separator { get; set; }
-
-        //==============================================================================
-        private Checkbox ShippedBox { get; set; }
-
-        //==============================================================================
-        private Checkbox BundledBox { get; set; }
-
+        private enum Indices
+        {
+            Portrait,
+            Name,
+            Time,
+            Weather,
+            LocationsTitle,
+            TitleSeparator,
+            LocationsList,
+            MiddleSeparator,
+            Shipped,
+            Bundled
+        }
 
         //==============================================================================
         public FishCard(IMonitor monitor, Fish fish, IEnumerable<Location> locations, bool shipped, bool inBundle,
             bool bundleComplete) : base(monitor)
         {
-            Portrait = new FishImage(Monitor) { FishId = fish.Id };
-            FishName = new Label(Monitor) { Text = fish.Name };
-            FishTime = new Label(Monitor) { Text = FormatTime(fish.StartTime, fish.StopTime) };
-            FishWeather = new Label(Monitor) { Text = FormatWeather(fish.Weathers) };
-            LocationsTitle = new Label(Monitor)
-                { Text = "Sightings", Alignment = Alignment.Center };
-            LocationsTitleSeparator = new Separator(Monitor);
-            FishLocations = new LabelList(Monitor, locations.Select(temp => temp.Name));
-            Separator = new Separator(Monitor);
-            ShippedBox = new Checkbox(Monitor, "Shipped") { Checked = shipped };
-            BundledBox = new Checkbox(Monitor, "Bundled") { Checked = bundleComplete, Disabled = !inBundle };
-        }
-
-        //==============================================================================
-        public override void Draw(SpriteBatch b)
-        {
-            Portrait.Draw(b);
-            FishName.Draw(b);
-            FishTime.Draw(b);
-            FishWeather.Draw(b);
-            ShippedBox.Draw(b);
-            BundledBox.Draw(b);
-            LocationsTitle.Draw(b);
-            LocationsTitleSeparator.Draw(b);
-            FishLocations.Draw(b);
-            Separator.Draw(b);
+            Components.Add(new FishImage(Monitor) { FishId = fish.Id });
+            Components.Add(new Label(Monitor) { Text = fish.Name });
+            Components.Add(new Label(Monitor) { Text = FormatTime(fish.StartTime, fish.StopTime) });
+            Components.Add(new Label(Monitor) { Text = FormatWeather(fish.Weathers) });
+            Components.Add(new Label(Monitor) { Text = "Sightings", Alignment = Alignment.Center });
+            Components.Add(new Separator(Monitor));
+            Components.Add(new LabelList(Monitor, locations.Select(temp => temp.Name)));
+            Components.Add(new Separator(Monitor));
+            Components.Add(new Checkbox(Monitor, "Shipped") { Checked = shipped });
+            Components.Add(new Checkbox(Monitor, "Bundled") { Checked = bundleComplete, Disabled = !inBundle });
         }
 
         //==============================================================================
         public override void Update(Rectangle bounds)
         {
             base.Update(bounds);
-
             PositionPortrait();
             PositionFishName();
             PositionFishTime();
@@ -95,11 +61,18 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         private void PositionPortrait()
         {
-            var nameSize = FishName.Font.MeasureString(FishName.Text);
-            var timeSize = FishTime.Font.MeasureString(FishTime.Text);
-            var weatherSize = FishWeather.Font.MeasureString(FishWeather.Text);
+            var nameLabel = GetComponent<Label>((int)Indices.Name);
+            var nameSize = nameLabel.Font.MeasureString(nameLabel.Text);
+
+            var timeLabel = GetComponent<Label>((int)Indices.Time);
+            var timeSize = timeLabel.Font.MeasureString(timeLabel.Text);
+
+            var weatherLabel = GetComponent<Label>((int)Indices.Weather);
+            var weatherSize = weatherLabel.Font.MeasureString(weatherLabel.Text);
+
             var combinedHeight = (int)(nameSize.Y + timeSize.Y + weatherSize.Y + 64);
-            Portrait.Update(new Rectangle()
+
+            Components[(int)Indices.Portrait].Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - 32,
                 Y = Bounds.Y + (Bounds.Height - combinedHeight) / 2,
@@ -111,11 +84,12 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         private void PositionFishName()
         {
-            var size = FishName.Font.MeasureString(FishName.Text);
-            FishName.Update(new Rectangle()
+            var label = GetComponent<Label>((int)Indices.Name);
+            var size = label.Font.MeasureString(label.Text);
+            label.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - (int)size.X / 2,
-                Y = Portrait.Bounds.Bottom + 1,
+                Y = Components[(int)Indices.Portrait].Bounds.Bottom + 1,
                 Width = (int)size.X,
                 Height = (int)size.Y
             });
@@ -124,11 +98,12 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         private void PositionFishTime()
         {
-            var size = FishTime.Font.MeasureString(FishTime.Text);
-            FishTime.Update(new Rectangle()
+            var label = GetComponent<Label>((int)Indices.Time);
+            var size = label.Font.MeasureString(label.Text);
+            label.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - (int)size.X / 2,
-                Y = FishName.Bounds.Bottom + 1,
+                Y = Components[(int)Indices.Name].Bounds.Bottom + 1,
                 Width = (int)size.X,
                 Height = (int)size.Y
             });
@@ -137,11 +112,12 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         private void PositionFishWeather()
         {
-            var size = FishWeather.Font.MeasureString(FishWeather.Text);
-            FishWeather.Update(new Rectangle()
+            var label = GetComponent<Label>((int)Indices.Weather);
+            var size = label.Font.MeasureString(label.Text);
+            label.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4 - (int)size.X / 2,
-                Y = FishTime.Bounds.Bottom + 1,
+                Y = Components[(int)Indices.Time].Bounds.Bottom + 1,
                 Width = (int)size.X,
                 Height = (int)size.Y
             });
@@ -150,8 +126,9 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         private void PositionLocationsTitle()
         {
-            var size = LocationsTitle.Font.MeasureString(LocationsTitle.Text);
-            LocationsTitle.Update(new Rectangle()
+            var label = GetComponent<Label>((int)Indices.LocationsTitle);
+            var size = label.Font.MeasureString(label.Text);
+            label.Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 2,
                 Y = Bounds.Y + 10,
@@ -163,10 +140,10 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         private void PositionLocationsTitleSeparator()
         {
-            LocationsTitleSeparator.Update(new Rectangle()
+            Components[(int)Indices.TitleSeparator].Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 2 + 10,
-                Y = LocationsTitle.Bounds.Bottom + 1,
+                Y = Components[(int)Indices.LocationsTitle].Bounds.Bottom + 1,
                 Width = Bounds.Width / 2 - 20,
                 Height = 1
             });
@@ -175,19 +152,19 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         private void PositionFishLocations()
         {
-            FishLocations.Update(new Rectangle()
+            Components[(int)Indices.LocationsList].Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 2,
-                Y = LocationsTitleSeparator.Bounds.Bottom + 1,
+                Y = Components[(int)Indices.TitleSeparator].Bounds.Bottom + 1,
                 Width = Bounds.Width / 2,
-                Height = (Bounds.Y + Bounds.Height) - LocationsTitleSeparator.Bounds.Bottom - 1
+                Height = (Bounds.Y + Bounds.Height) - Components[(int)Indices.TitleSeparator].Bounds.Bottom - 1
             });
         }
 
         //==============================================================================
         private void PositionSeparator()
         {
-            Separator.Update(new Rectangle()
+            Components[(int)Indices.MiddleSeparator].Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 2,
                 Y = Bounds.Y + 10,
@@ -199,24 +176,24 @@ namespace FishAlmanac.Ui.Components.Cards
         //==============================================================================
         private void PositionShippedBox()
         {
-            ShippedBox.Update(new Rectangle()
+            Components[(int)Indices.Shipped].Update(new Rectangle()
             {
                 X = Bounds.X,
-                Y = FishWeather.Bounds.Bottom + 1,
+                Y = Components[(int)Indices.Weather].Bounds.Bottom + 1,
                 Width = Bounds.Width / 4,
-                Height = Bounds.Bottom - FishWeather.Bounds.Bottom - 1
+                Height = Bounds.Bottom - Components[(int)Indices.Weather].Bounds.Bottom - 1
             });
         }
 
         //==============================================================================
         private void PositionBundledBox()
         {
-            BundledBox.Update(new Rectangle()
+            Components[(int)Indices.Bundled].Update(new Rectangle()
             {
                 X = Bounds.X + Bounds.Width / 4,
-                Y = FishWeather.Bounds.Bottom + 1,
+                Y = Components[(int)Indices.Weather].Bounds.Bottom + 1,
                 Width = Bounds.Width / 4,
-                Height = Bounds.Bottom - FishWeather.Bounds.Bottom - 1
+                Height = Bounds.Bottom - Components[(int)Indices.Weather].Bounds.Bottom - 1
             });
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FishAlmanac.Ui.Components.Base;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
@@ -6,84 +7,48 @@ using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
-    public class Label : IComponent
+    public class Label : Component
     {
         //==============================================================================
-        public Rectangle Bounds { get; set; }
-
-        //==============================================================================
-        public Color Color { get; set; }
-
-        //==============================================================================
-        public IMonitor Monitor { get; set; }
-
-        //==============================================================================
         public string Text { get; init; }
-
-        //==============================================================================
-        public bool Bold { get; set; }
 
         //==============================================================================
         public Alignment Alignment { get; set; }
 
         //==============================================================================
-        public SpriteFont Font { get; set; }
+        public SpriteFont Font { get; }
 
         //==============================================================================
         private string AdjustedText { get; set; }
-        
+
         //==============================================================================
         private Vector2 TextPosition { get; set; }
 
 
         //==============================================================================
-        public Label(IMonitor monitor)
+        public Label(IMonitor monitor) : base(monitor)
         {
-            Bounds = new Rectangle();
-            Color = Color.Black;
-            Monitor = monitor;
             Text = "";
-            Bold = false;
             Alignment = Alignment.Left;
             Font = Game1.smallFont;
             TextPosition = new Vector2();
+            Color = Color.Black;
         }
 
         //==============================================================================
-        public void Draw(SpriteBatch b)
+        public override void Draw(SpriteBatch b)
         {
-            if (Bold)
-            {
-                Utility.drawBoldText(b, AdjustedText, Font, TextPosition, Color);
-            }
-            else
-            {
-                b.DrawString(Font, AdjustedText, TextPosition, Color, 0f, Vector2.Zero, 1f,
-                    SpriteEffects.None, 1f);
-            }
+            base.Draw(b);
+            b.DrawString(Font, AdjustedText, TextPosition, Color, 0f, Vector2.Zero, 1f,
+                SpriteEffects.None, 1f);
         }
-        
+
         //==============================================================================
-        public void Update(Rectangle bounds)
+        public override void Update(Rectangle bounds)
         {
-            Bounds = bounds;
+            base.Update(bounds);
             AdjustedText = GetText();
             TextPosition = GetTextPosition(Font.MeasureString(AdjustedText));
-        }
-
-        //==============================================================================
-        public void HandleScrollWheel(int direction)
-        {
-        }
-
-        //==============================================================================
-        public void HandleLeftClick(int x, int y)
-        {
-        }
-
-        //==============================================================================
-        public void HandleGamepadInput(InputButtons button)
-        {
         }
 
         //==============================================================================

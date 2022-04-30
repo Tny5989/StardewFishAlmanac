@@ -115,7 +115,7 @@ namespace FishAlmanac.Ui
                 }
 
                 var (inBundle, bundleComplete) = BundleUtils.ItemBundleStatus(fish.Id, bundles);
-                Display.Cards.Add(new FishCard(Monitor, fish, locations, ShipUtils.HasShippedItem(fish.Id),
+                Display.AddCard(new FishCard(Monitor, fish, locations, ShipUtils.HasShippedItem(fish.Id),
                     inBundle, inBundle && bundleComplete));
             }
         }

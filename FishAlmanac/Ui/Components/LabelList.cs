@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FishAlmanac.Ui.Components.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -8,75 +9,41 @@ using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
-    public class LabelList : IComponent
+    public class LabelList : Component
     {
         //==============================================================================
-        public Rectangle Bounds { get; set; }
-
-        //==============================================================================
-        public Color Color { get; set; }
-
-        //==============================================================================
-        public IMonitor Monitor { get; set; }
-
-        //==============================================================================
-        private List<Label> Items { get; set; }
-
-        //==============================================================================
         private Vector2 MaxDimensions { get; set; }
-        
+
         //==============================================================================
         private bool Valid { get; set; }
 
 
         //==============================================================================
-        public LabelList(IMonitor monitor, IEnumerable<string> items)
+        public LabelList(IMonitor monitor, IEnumerable<string> items) : base(monitor)
         {
-            Bounds = new Rectangle();
-            Color = Color.Black;
-            Monitor = monitor;
-            Items = new List<Label>();
             MaxDimensions = new Vector2();
+            Color = Color.Black;
 
             CreateLabels(items);
         }
 
         //==============================================================================
-        public void Draw(SpriteBatch b)
+        public override void Draw(SpriteBatch b)
         {
             if (!Valid)
             {
                 return;
             }
 
-            foreach (var item in Items)
-            {
-                item.Draw(b);
-            }
+            base.Draw(b);
         }
 
         //==============================================================================
-        public void Update(Rectangle bounds)
+        public override void Update(Rectangle bounds)
         {
-            Bounds = bounds;
+            base.Update(bounds);
             Valid = PositionLabels();
         }
-
-        //==============================================================================
-        public void HandleScrollWheel(int direction)
-        {
-        }
-
-        //==============================================================================
-        public void HandleLeftClick(int x, int y)
-        {
-        }
-
-        //==============================================================================
-        public void HandleGamepadInput(InputButtons button)
-        {
-        }
-
 
         //==============================================================================
         private void CreateLabels(IEnumerable<string> items)
@@ -87,7 +54,9 @@ namespace FishAlmanac.Ui.Components
                 var dim = Game1.smallFont.MeasureString(str);
                 maxDim.X = Math.Max(maxDim.X, dim.X);
                 maxDim.Y = Math.Max(maxDim.Y, dim.Y);
-                Items.Add(new Label(Monitor) { Text = str });
+
+                var item = new Label(Monitor) { Text = str };
+                Components.Add(item);
             }
 
             MaxDimensions = maxDim;
@@ -99,9 +68,9 @@ namespace FishAlmanac.Ui.Components
             var maxWidth = Math.Min(MaxDimensions.X, Bounds.Width - 20);
             var maxRows = (int)((Bounds.Height - 20) / MaxDimensions.Y);
 
-            for (var i = 0; i < Items.Count; ++i)
+            for (var i = 0; i < Components.Count; ++i)
             {
-                Items[i].Update(new Rectangle()
+                Components[i].Update(new Rectangle()
                 {
                     X = Bounds.X + (int)(Bounds.Width - maxWidth) / 2,
                     Y = Bounds.Y + 10 + (int)(MaxDimensions.Y * i),
@@ -110,7 +79,7 @@ namespace FishAlmanac.Ui.Components
                 });
             }
 
-            if (maxRows >= Items.Count)
+            if (maxRows >= Components.Count)
             {
                 return true;
             }

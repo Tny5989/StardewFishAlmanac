@@ -13,7 +13,7 @@ namespace FishAlmanac.Ui.Components.Buttons
         private static Texture2D Texture => Game1.mouseCursors;
 
         //==============================================================================
-        public virtual Rectangle Rectangle => new Rectangle(0, 0, 0, 0);
+        protected virtual Rectangle Rectangle => new Rectangle(0, 0, 0, 0);
 
 
         //==============================================================================
@@ -25,6 +25,7 @@ namespace FishAlmanac.Ui.Components.Buttons
         //==============================================================================
         public override void Draw(SpriteBatch b)
         {
+            base.Draw(b);
             b.Draw(Texture, GetModifiedBounds(GetBoundsModifier(Game1.input.GetMouseState().Position)), Rectangle,
                 Color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
             Clicked = false;
@@ -67,7 +68,7 @@ namespace FishAlmanac.Ui.Components.Buttons
     public class LeftButton : ArrowButton
     {
         //==============================================================================
-        public override Rectangle Rectangle => new Rectangle(8, 268, 43, 39);
+        protected override Rectangle Rectangle => new Rectangle(8, 268, 43, 39);
 
 
         //==============================================================================
@@ -83,7 +84,7 @@ namespace FishAlmanac.Ui.Components.Buttons
     public class RightButton : ArrowButton
     {
         //==============================================================================
-        public override Rectangle Rectangle => new Rectangle(12, 204, 43, 39);
+        protected override Rectangle Rectangle => new Rectangle(12, 204, 43, 39);
 
 
         //==============================================================================
@@ -99,7 +100,7 @@ namespace FishAlmanac.Ui.Components.Buttons
     public class UpButton : ArrowButton
     {
         //==============================================================================
-        public override Rectangle Rectangle => new Rectangle(76, 72, 39, 43);
+        protected override Rectangle Rectangle => new Rectangle(76, 72, 39, 43);
 
 
         //==============================================================================
@@ -115,7 +116,7 @@ namespace FishAlmanac.Ui.Components.Buttons
     public class DownButton : ArrowButton
     {
         //==============================================================================
-        public override Rectangle Rectangle => new Rectangle(12, 76, 39, 43);
+        protected override Rectangle Rectangle => new Rectangle(12, 76, 39, 43);
 
 
         //==============================================================================

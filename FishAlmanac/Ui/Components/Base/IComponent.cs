@@ -3,19 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
-namespace FishAlmanac.Ui.Components
+namespace FishAlmanac.Ui.Components.Base
 {
     public interface IComponent
     {
         //==============================================================================
-        public Rectangle Bounds { get; set; }
-
-        //==============================================================================
-        public Color Color { get; set; }
-
-        //==============================================================================
         public IMonitor Monitor { get; set; }
-
+        
 
         //==============================================================================
         public void Draw(SpriteBatch b);

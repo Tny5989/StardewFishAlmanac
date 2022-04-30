@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using FishAlmanac.Ui.Components.Base;
 using FishAlmanac.Ui.Components.Cards;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,62 +9,46 @@ using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
-    public class CardDisplay : SimpleObserver<string>, IComponent
+    public class CardDisplay : SimpleObserver<string>
     {
         //==============================================================================
-        public Rectangle Bounds { get; set; }
-
-        //==============================================================================
-        public Color Color { get; set; }
-
-        //==============================================================================
-        public IMonitor Monitor { get; set; }
-
-        //==============================================================================
-        public List<Card> Cards { get; set; }
-
-        //==============================================================================
-        private NavBar NavBar { get; set; }
-
-        //==============================================================================
-        private Separator Separator { get; set; }
+        private enum Indices
+        {
+            NavBar,
+            Separator,
+            Cards
+        }
 
         //==============================================================================
         private int Index { get; set; }
 
+        //==============================================================================
+        private int Count { get; set; }
+
 
         //==============================================================================
-        public CardDisplay(IMonitor monitor)
+        public CardDisplay(IMonitor monitor) : base(monitor)
         {
-            Bounds = new Rectangle();
-            Color = Color.White;
-            Monitor = monitor;
-            Cards = new List<Card>();
-            NavBar = new NavBar(monitor);
-            Separator = new Separator(monitor);
             Index = 0;
+            Count = 0;
 
-            NavBar.Subscribe(this);
+            Components.Add(new NavBar(monitor));
+            Components.Add(new Separator(monitor));
+
+            GetComponent<NavBar>((int)Indices.NavBar).Subscribe(this);
         }
 
         //==============================================================================
-        public void Draw(SpriteBatch b)
+        public override void Draw(SpriteBatch b)
         {
             UpdateNavBar();
-
-            if (Cards.Count > 0)
-            {
-                Cards[Index].Draw(b);
-            }
-
-            Separator.Draw(b);
-            NavBar.Draw(b);
+            base.Draw(b);
         }
 
         //==============================================================================
-        public void Update(Rectangle bounds)
+        public override void Update(Rectangle bounds)
         {
-            Bounds = bounds;
+            base.Update(bounds);
 
             PositionNavBar();
             PositionSeparator();
@@ -72,75 +56,57 @@ namespace FishAlmanac.Ui.Components
         }
 
         //==============================================================================
-        public void HandleScrollWheel(int direction)
-        {
-            NavBar.HandleScrollWheel(direction);
-            if (Cards.Count > 0)
-            {
-                Cards[Index].HandleScrollWheel(direction);
-            }
-        }
-
-        //==============================================================================
-        public void HandleLeftClick(int x, int y)
-        {
-            NavBar.HandleLeftClick(x, y);
-            if (Cards.Count > 0)
-            {
-                Cards[Index].HandleLeftClick(x, y);
-            }
-        }
-
-        //==============================================================================
-        public void HandleGamepadInput(InputButtons button)
-        {
-            NavBar.HandleGamepadInput(button);
-        }
-
-        //==============================================================================
         public override void OnNext(string value)
         {
-            switch (value)
+            var mod = value switch
             {
-                case "previous":
-                    Index -= 1;
-                    break;
-                case "next":
-                    Index += 1;
-                    break;
-            }
+                "previous" => -1,
+                "next" => 1,
+                _ => 0
+            };
 
-            Index = Math.Clamp(Index, 0, Cards.Count - 1);
+            GetComponent<Card>((int)Indices.Cards + Index).Visible = false;
+            Index = Math.Clamp(Index + mod, 0, Count - 1);
+            GetComponent<Card>((int)Indices.Cards + Index).Visible = true;
+        }
+
+        //==============================================================================
+        public void AddCard(Card card)
+        {
+            card.Visible = false;
+            Components.Add(card);
+            ++Count;
+            OnNext("");
         }
 
         //==============================================================================
         private void PositionNavBar()
         {
-            NavBar.Update(new Rectangle(Bounds.X, Bounds.Y + Bounds.Height - Game1.tileSize, Bounds.Width,
-                Game1.tileSize));
+            GetComponent<NavBar>((int)Indices.NavBar).Update(new Rectangle(Bounds.X,
+                Bounds.Y + Bounds.Height - Game1.tileSize, Bounds.Width, Game1.tileSize));
         }
 
         //==============================================================================
         private void PositionSeparator()
         {
-            Separator.Update(new Rectangle(Bounds.X + 10, Bounds.Y + Bounds.Height - Game1.tileSize - 1,
-                Bounds.Width - 20, 1));
+            GetComponent<Separator>((int)Indices.Separator).Update(new Rectangle(Bounds.X + 10,
+                Bounds.Y + Bounds.Height - Game1.tileSize - 1, Bounds.Width - 20, 1));
         }
 
         //==============================================================================
         private void PositionCards()
         {
-            foreach (var card in Cards)
+            for (var i = 0; i < Count; ++i)
             {
-                card.Update(new Rectangle(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height - Game1.tileSize));
+                GetComponent<Card>((int)Indices.Cards + i).Update(new Rectangle(Bounds.X, Bounds.Y, Bounds.Width,
+                    Bounds.Height - Game1.tileSize));
             }
         }
 
         //==============================================================================
         private void UpdateNavBar()
         {
-            NavBar.ShowPrevious = Index > 0;
-            NavBar.ShowNext = Index < Cards.Count - 1;
+            GetComponent<NavBar>(0).ShowButtons(Index > 0, Index < Count - 1);
         }
     }
 }

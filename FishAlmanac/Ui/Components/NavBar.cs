@@ -1,125 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using FishAlmanac.Ui.Components.Base;
 using FishAlmanac.Ui.Components.Buttons;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
-    public class NavBar : SimpleObserver<Button>, IComponent, IObservable<string>
+    public class NavBar : SimpleObserver<Button>, IObservable<string>
     {
         //==============================================================================
-        public Rectangle Bounds { get; set; }
+        private enum Indices
+        {
+            PreviousButton,
+            NextButton
+        }
 
         //==============================================================================
-        public Color Color { get; set; }
-
-        //==============================================================================
-        public IMonitor Monitor { get; set; }
-
-        //==============================================================================
-        public Orientation Orientation { get; set; }
-
-        //==============================================================================
-        public bool ShowPrevious { get; set; }
-
-        //==============================================================================
-        public bool ShowNext { get; set; }
+        public Orientation Orientation { get; }
 
         //==============================================================================
         private List<IObserver<string>> Observers { get; }
 
-        //==============================================================================
-        private ArrowButton PreviousButton { get; set; }
 
         //==============================================================================
-        private ArrowButton NextButton { get; set; }
-
-
-        //==============================================================================
-        public NavBar(IMonitor monitor)
+        public NavBar(IMonitor monitor) : base(monitor)
         {
-            Bounds = new Rectangle();
-            Color = Color.White;
-            Monitor = monitor;
             Orientation = Orientation.Horizontal;
-            ShowPrevious = false;
-            ShowNext = false;
             Observers = new List<IObserver<string>>();
             CreateNavButtons();
+            ShowButtons(false, false);
         }
 
         //==============================================================================
-        public void Draw(SpriteBatch b)
+        public override void Update(Rectangle bounds)
         {
-            if (ShowPrevious)
-            {
-                PreviousButton.Draw(b);
-            }
-
-            if (ShowNext)
-            {
-                NextButton.Draw(b);
-            }
-        }
-
-        //==============================================================================
-        public void Update(Rectangle bounds)
-        {
-            Bounds = bounds;
+            base.Update(bounds);
             PositionNavButtons();
         }
 
         //==============================================================================
-        public void HandleScrollWheel(int direction)
+        public override void HandleScrollWheel(int direction)
         {
-            switch (direction)
+            base.HandleScrollWheel(direction);
+
+            var component = direction switch
             {
-                case > 0:
-                    PreviousButton.HandleLeftClick(PreviousButton.Bounds.X, PreviousButton.Bounds.Y);
-                    break;
-                default:
-                    NextButton.HandleLeftClick(NextButton.Bounds.X, NextButton.Bounds.Y);
-                    break;
-            }
+                > 0 => Components[(int)Indices.PreviousButton],
+                _ => Components[(int)Indices.NextButton]
+            };
+            component.HandleLeftClick(component.Bounds.X, component.Bounds.Y);
         }
 
         //==============================================================================
-        public void HandleLeftClick(int x, int y)
-        {
-            PreviousButton.HandleLeftClick(x, y);
-            NextButton.HandleLeftClick(x, y);
-        }
-
-        //==============================================================================
-        public void HandleGamepadInput(InputButtons button)
+        public override void HandleGamepadInput(InputButtons button)
         {
             var left = (button & InputButtons.LeftTrigger) == InputButtons.LeftTrigger;
             var right = (button & InputButtons.RightTrigger) == InputButtons.RightTrigger;
+
             if (left)
             {
-                PreviousButton.HandleLeftClick(PreviousButton.Bounds.X, PreviousButton.Bounds.Y);
+                var component = Components[(int)Indices.PreviousButton];
+                HandleLeftClick(component.Bounds.X, component.Bounds.Y);
             }
 
             if (right)
             {
-                NextButton.HandleLeftClick(NextButton.Bounds.X, NextButton.Bounds.Y);
+                var component = Components[(int)Indices.NextButton];
+                HandleLeftClick(component.Bounds.X, component.Bounds.Y);
             }
         }
 
         //==============================================================================
         public override void OnNext(Button value)
         {
-            if (value == PreviousButton)
+            if (value == Components[(int)Indices.PreviousButton])
             {
                 foreach (var observer in Observers)
                 {
                     observer.OnNext("previous");
                 }
             }
-            else if (value == NextButton)
+            else if (value == Components[(int)Indices.NextButton])
             {
                 foreach (var observer in Observers)
                 {
@@ -136,7 +99,7 @@ namespace FishAlmanac.Ui.Components
                 Observers.Add(observer);
             }
 
-            return new Disposable<string>(Observers, observer);
+            return new Disposable<string>(Monitor, Observers, observer);
         }
 
         //==============================================================================
@@ -145,18 +108,25 @@ namespace FishAlmanac.Ui.Components
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    PreviousButton = new UpButton(Monitor);
-                    NextButton = new DownButton(Monitor);
+                    Components.Add(new UpButton(Monitor));
+                    Components.Add(new DownButton(Monitor));
                     break;
                 case Orientation.Horizontal:
                 default:
-                    PreviousButton = new LeftButton(Monitor);
-                    NextButton = new RightButton(Monitor);
+                    Components.Add(new LeftButton(Monitor));
+                    Components.Add(new RightButton(Monitor));
                     break;
             }
 
-            PreviousButton.Subscribe(this);
-            NextButton.Subscribe(this);
+            GetComponent<ArrowButton>((int)Indices.PreviousButton).Subscribe(this);
+            GetComponent<ArrowButton>((int)Indices.NextButton).Subscribe(this);
+        }
+
+        //==============================================================================
+        public void ShowButtons(bool previous, bool next)
+        {
+            Components[(int)Indices.PreviousButton].Visible = previous;
+            Components[(int)Indices.NextButton].Visible = next;
         }
 
         //==============================================================================
@@ -168,9 +138,11 @@ namespace FishAlmanac.Ui.Components
                 {
                     var x = Bounds.X + 10;
                     var y = Bounds.Y + 10;
-                    PreviousButton.Update(new Rectangle(x, y, Bounds.Width - 20, Bounds.Width - 20));
+                    Components[(int)Indices.PreviousButton]
+                        .Update(new Rectangle(x, y, Bounds.Width - 20, Bounds.Width - 20));
                     y = Bounds.Y + Bounds.Height - 10 - (Bounds.Width - 20);
-                    NextButton.Update(new Rectangle(x, y, Bounds.Width - 20, Bounds.Width - 20));
+                    Components[(int)Indices.NextButton]
+                        .Update(new Rectangle(x, y, Bounds.Width - 20, Bounds.Width - 20));
                     break;
                 }
                 case Orientation.Horizontal:
@@ -178,9 +150,11 @@ namespace FishAlmanac.Ui.Components
                 {
                     var x = Bounds.X + 10;
                     var y = Bounds.Y + 10;
-                    PreviousButton.Update(new Rectangle(x, y, Bounds.Height - 20, Bounds.Height - 20));
+                    Components[(int)Indices.PreviousButton]
+                        .Update(new Rectangle(x, y, Bounds.Height - 20, Bounds.Height - 20));
                     x = Bounds.X + Bounds.Width - 10 - (Bounds.Height - 20);
-                    NextButton.Update(new Rectangle(x, y, Bounds.Height - 20, Bounds.Height - 20));
+                    Components[(int)Indices.NextButton]
+                        .Update(new Rectangle(x, y, Bounds.Height - 20, Bounds.Height - 20));
                     break;
                 }
             }

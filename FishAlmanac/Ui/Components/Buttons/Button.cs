@@ -1,56 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using FishAlmanac.Ui.Components.Base;
 using StardewModdingAPI;
 using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components.Buttons
 {
-    public abstract class Button : IComponent, IObservable<Button>
+    public abstract class Button : Component, IObservable<Button>
     {
         //==============================================================================
-        public Rectangle Bounds { get; set; }
-        
-        //==============================================================================
-        public Color Color { get; set; }
-        
-        //==============================================================================
-        public IMonitor Monitor { get; set; }
-        
-        //==============================================================================
         protected bool Clicked { get; set; }
-        
+
         //==============================================================================
         private List<IObserver<Button>> Observers { get; }
 
 
         //==============================================================================
-        protected Button(IMonitor monitor)
+        protected Button(IMonitor monitor) : base(monitor)
         {
-            Bounds = new Rectangle();
-            Color = Color.White;
-            Monitor = monitor;
             Clicked = false;
             Observers = new List<IObserver<Button>>();
         }
 
         //==============================================================================
-        public abstract void Draw(SpriteBatch b);
-        
-        //==============================================================================
-        public virtual void Update(Rectangle bounds)
-        {
-            Bounds = bounds;
-        }
-
-        //==============================================================================
-        public virtual void HandleScrollWheel(int direction)
-        {
-        }
-
-        //==============================================================================
-        public virtual void HandleLeftClick(int x, int y)
+        public override void HandleLeftClick(int x, int y)
         {
             if (!Bounds.Contains(x, y))
             {
@@ -64,12 +37,6 @@ namespace FishAlmanac.Ui.Components.Buttons
                 observer.OnNext(this);
             }
         }
-        
-        //==============================================================================
-        public virtual void HandleGamepadInput(InputButtons button)
-        {
-            
-        }
 
         //==============================================================================
         public IDisposable Subscribe(IObserver<Button> observer)
@@ -79,7 +46,7 @@ namespace FishAlmanac.Ui.Components.Buttons
                 Observers.Add(observer);
             }
 
-            return new Disposable<Button>(Observers, observer);
+            return new Disposable<Button>(Monitor, Observers, observer);
         }
     }
 }

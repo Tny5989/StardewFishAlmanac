@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FishAlmanac.Ui.Components.Base;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
@@ -6,8 +7,14 @@ using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
 {
-    public class Checkbox : IComponent
+    public class Checkbox : Component
     {
+        //==============================================================================
+        private enum Indices
+        {
+            Text
+        }
+
         //==============================================================================
         private static Texture2D Texture => Game1.mouseCursors;
 
@@ -18,22 +25,10 @@ namespace FishAlmanac.Ui.Components
         private static Rectangle CheckedRectangle => new Rectangle(236, 425, 9, 9);
 
         //==============================================================================
-        public Rectangle Bounds { get; set; }
-
-        //==============================================================================
-        public Color Color { get; set; }
-
-        //==============================================================================
-        public IMonitor Monitor { get; set; }
-
-        //==============================================================================
         public bool Checked { get; set; }
 
         //==============================================================================
         public bool Disabled { get; set; }
-
-        //==============================================================================
-        private Label Text { get; set; }
 
         //==============================================================================
         private Rectangle DstRectangle { get; set; }
@@ -43,52 +38,37 @@ namespace FishAlmanac.Ui.Components
 
 
         //==============================================================================
-        public Checkbox(IMonitor monitor, string text)
+        public Checkbox(IMonitor monitor, string text) : base(monitor)
         {
-            Bounds = new Rectangle();
-            Color = Color.White;
-            Monitor = monitor;
             Checked = false;
-            Text = new Label(Monitor) { Text = text };
             DstRectangle = new Rectangle();
             SrcRectangle = new Rectangle();
+
+            Components.Add(new Label(monitor) { Text = text });
         }
 
         //==============================================================================
-        public void Draw(SpriteBatch b)
+        public override void Draw(SpriteBatch b)
         {
+            base.Draw(b);
             b.Draw(Texture, DstRectangle, SrcRectangle, Color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
-            Text.Draw(b);
         }
 
         //==============================================================================
-        public void Update(Rectangle bounds)
+        public override void Update(Rectangle bounds)
         {
-            Bounds = bounds;
+            base.Update(bounds);
+
+            var label = GetComponent<Label>(0);
 
             Color = Disabled ? new Color(255, 255, 255, 100) : Color.White;
-            Text.Color = Disabled ? new Color(0, 0, 0, 100) : Color.Black;
+            Components[(int)Indices.Text].Color = Disabled ? new Color(0, 0, 0, 100) : Color.Black;
 
-            var textSize = Text.Font.MeasureString(Text.Text);
+            var textSize = label.Font.MeasureString(label.Text);
             DstRectangle = GetDestinationRectangle(textSize);
             SrcRectangle = GetSourceRectangle();
 
             PositionText(textSize);
-        }
-
-        //==============================================================================
-        public void HandleScrollWheel(int direction)
-        {
-        }
-
-        //==============================================================================
-        public void HandleLeftClick(int x, int y)
-        {
-        }
-
-        //==============================================================================
-        public void HandleGamepadInput(InputButtons button)
-        {
         }
 
         //==============================================================================
@@ -106,7 +86,7 @@ namespace FishAlmanac.Ui.Components
         //==============================================================================
         private void PositionText(Vector2 textSize)
         {
-            Text.Update(new Rectangle()
+            GetComponent<Label>(0).Update(new Rectangle()
             {
                 X = DstRectangle.Right + 10,
                 Y = DstRectangle.Top + (DstRectangle.Height - (int)textSize.Y) / 2,
