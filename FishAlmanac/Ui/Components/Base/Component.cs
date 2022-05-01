@@ -11,20 +11,20 @@ namespace FishAlmanac.Ui.Components.Base
     {
         //==============================================================================
         public IMonitor Monitor { get; set; }
-        
+
         //==============================================================================
         public Rectangle Bounds { get; private set; }
-        
+
         //==============================================================================
         public Color Color { get; set; }
-        
+
         //==============================================================================
         public bool Visible { get; set; }
-        
+
         //==============================================================================
         protected List<Component> Components { get; }
-        
-        
+
+
         //==============================================================================
         protected Component(IMonitor monitor)
         {
@@ -53,7 +53,7 @@ namespace FishAlmanac.Ui.Components.Base
             {
                 return;
             }
-            
+
             foreach (var component in Components.Where(component => component.Visible))
             {
                 component.Draw(b);
@@ -67,17 +67,21 @@ namespace FishAlmanac.Ui.Components.Base
         }
 
         //==============================================================================
-        public virtual void HandleScrollWheel(int direction)
+        public virtual Point GetContentSize()
+        {
+            return Bounds.Size;
+        }
+
+        //==============================================================================
+        public virtual bool HandleScrollWheel(int direction)
         {
             if (!Visible)
             {
-                return;
+                return false;
             }
 
-            foreach (var component in Components.Where(component => component.Visible))
-            {
-                component.HandleScrollWheel(direction);
-            }
+            return Components.Where(component => component.Visible)
+                .Any(component => component.HandleScrollWheel(direction));
         }
 
         //==============================================================================
@@ -91,20 +95,6 @@ namespace FishAlmanac.Ui.Components.Base
             foreach (var component in Components.Where(component => component.Visible))
             {
                 component.HandleLeftClick(x, y);
-            }
-        }
-
-        //==============================================================================
-        public virtual void HandleGamepadInput(InputButtons button)
-        {
-            if (!Visible)
-            {
-                return;
-            }
-
-            foreach (var component in Components.Where(component => component.Visible))
-            {
-                component.HandleGamepadInput(button);
             }
         }
     }

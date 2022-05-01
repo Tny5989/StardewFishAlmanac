@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FishAlmanac.GameData;
 using FishAlmanac.Ui.Components;
 using FishAlmanac.Ui.Components.Cards;
@@ -47,20 +48,10 @@ namespace FishAlmanac.Ui
         }
 
         //==============================================================================
-        public override void receiveGamePadButton(Buttons b)
-        {
-            if (b == Buttons.B)
-            {
-                exitThisMenu();
-                return;
-            }
-            Display.HandleGamepadInput(b);
-        }
-
-        //==============================================================================
         public override void receiveScrollWheelAction(int direction)
         {
-            Display.HandleScrollWheel(direction);
+            var temp = Math.Min(1, Math.Max(-1, direction));
+            Display.HandleScrollWheel(temp * 10);
         }
 
         //==============================================================================

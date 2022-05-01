@@ -9,7 +9,7 @@ namespace FishAlmanac.Ui.Components.Base
     {
         //==============================================================================
         public IMonitor Monitor { get; set; }
-        
+
 
         //==============================================================================
         public void Draw(SpriteBatch b);
@@ -18,12 +18,12 @@ namespace FishAlmanac.Ui.Components.Base
         public void Update(Rectangle bounds);
 
         //==============================================================================
-        public void HandleScrollWheel(int direction);
+        public Point GetContentSize();
+
+        //==============================================================================
+        public bool HandleScrollWheel(int direction);
 
         //==============================================================================
         public void HandleLeftClick(int x, int y);
-
-        //==============================================================================
-        public void HandleGamepadInput(InputButtons button);
     }
 }

@@ -4,8 +4,11 @@ using StardewModdingAPI;
 
 namespace FishAlmanac.Ui.Components.Base
 {
-    internal class Disposable<T> : Component, IDisposable
+    internal class Disposable<T> : IDisposable
     {
+        //==============================================================================
+        public IMonitor Monitor { get; set; }
+        
         //==============================================================================
         private List<IObserver<T>> Observers { get; }
 
@@ -14,8 +17,9 @@ namespace FishAlmanac.Ui.Components.Base
 
 
         //==============================================================================
-        internal Disposable(IMonitor monitor, List<IObserver<T>> observers, IObserver<T> observer) : base(monitor)
+        internal Disposable(IMonitor monitor, List<IObserver<T>> observers, IObserver<T> observer)
         {
+            Monitor = monitor;
             Observers = observers;
             Observer = observer;
         }

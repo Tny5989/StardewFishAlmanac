@@ -4,6 +4,7 @@ using FishAlmanac.Ui.Components.Base;
 using FishAlmanac.Ui.Components.Buttons;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
+using StardewValley;
 using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components
@@ -18,7 +19,7 @@ namespace FishAlmanac.Ui.Components
         }
 
         //==============================================================================
-        public Orientation Orientation { get; }
+        private Orientation Orientation { get; }
 
         //==============================================================================
         private List<IObserver<string>> Observers { get; }
@@ -41,35 +42,16 @@ namespace FishAlmanac.Ui.Components
         }
 
         //==============================================================================
-        public override void HandleScrollWheel(int direction)
+        public override bool HandleScrollWheel(int direction)
         {
             base.HandleScrollWheel(direction);
-
             var component = direction switch
             {
                 > 0 => Components[(int)Indices.PreviousButton],
                 _ => Components[(int)Indices.NextButton]
             };
             component.HandleLeftClick(component.Bounds.X, component.Bounds.Y);
-        }
-
-        //==============================================================================
-        public override void HandleGamepadInput(InputButtons button)
-        {
-            var left = (button & InputButtons.LeftTrigger) == InputButtons.LeftTrigger;
-            var right = (button & InputButtons.RightTrigger) == InputButtons.RightTrigger;
-
-            if (left)
-            {
-                var component = Components[(int)Indices.PreviousButton];
-                HandleLeftClick(component.Bounds.X, component.Bounds.Y);
-            }
-
-            if (right)
-            {
-                var component = Components[(int)Indices.NextButton];
-                HandleLeftClick(component.Bounds.X, component.Bounds.Y);
-            }
+            return true;
         }
 
         //==============================================================================

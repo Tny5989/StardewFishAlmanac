@@ -36,7 +36,7 @@ namespace FishAlmanac.Ui.Components.Cards
             Components.Add(new Label(Monitor) { Text = FormatWeather(fish.Weathers) });
             Components.Add(new Label(Monitor) { Text = "Sightings", Alignment = Alignment.Center });
             Components.Add(new Separator(Monitor));
-            Components.Add(new LabelList(Monitor, locations.Select(temp => temp.Name)));
+            Components.Add(new ScrollArea(Monitor, new LabelList(Monitor, locations.Select(temp => temp.Name))));
             Components.Add(new Separator(Monitor));
             Components.Add(new Checkbox(Monitor, "Shipped") { Checked = shipped });
             Components.Add(new Checkbox(Monitor, "Bundled") { Checked = bundleComplete, Disabled = !inBundle });

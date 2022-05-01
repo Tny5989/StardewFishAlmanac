@@ -44,6 +44,16 @@ namespace FishAlmanac.Ui.Components
             base.Update(bounds);
             Valid = PositionLabels();
         }
+        
+        //==============================================================================
+        public override Point GetContentSize()
+        {
+            return new Point()
+            {
+                X = Bounds.Width,
+                Y = (int)(MaxDimensions.Y * Components.Count + 20)
+            };
+        }
 
         //==============================================================================
         private void CreateLabels(IEnumerable<string> items)
