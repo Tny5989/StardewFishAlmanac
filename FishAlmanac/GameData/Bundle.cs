@@ -6,16 +6,16 @@ namespace FishAlmanac.GameData
     {
         //==============================================================================
         public int Id { get; }
-        
+
         //==============================================================================
         public string RoomId { get; }
 
         //==============================================================================
         public string Name { get; }
-        
+
         //==============================================================================
         public List<int> RequiredItems { get; }
-        
+
         public List<bool> CompleteItems { get; }
 
 
@@ -60,6 +60,7 @@ namespace FishAlmanac.GameData
             {
                 return true;
             }
+
             if (GetType() != obj.GetType())
             {
                 return false;
@@ -73,7 +74,7 @@ namespace FishAlmanac.GameData
         {
             return int.Parse(data[1]);
         }
-        
+
         //==============================================================================
         private static string ParseRoomId(IReadOnlyList<string> data)
         {

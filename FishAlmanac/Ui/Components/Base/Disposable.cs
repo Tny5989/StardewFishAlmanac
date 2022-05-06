@@ -8,7 +8,7 @@ namespace FishAlmanac.Ui.Components.Base
     {
         //==============================================================================
         public IMonitor Monitor { get; set; }
-        
+
         //==============================================================================
         private List<IObserver<T>> Observers { get; }
 

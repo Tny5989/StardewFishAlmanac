@@ -6,7 +6,8 @@ This is still a work in progress.
 TODO:
 
 * Readable location names
-* Move action tile to the docks
+* Make an action tile somewhere (docks?)
 * Find/Create art for the action tile
 * Find a way to avoid spoiling locations
 * Make a prettier ui (???)
+* Gamepad support

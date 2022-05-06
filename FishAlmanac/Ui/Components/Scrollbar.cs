@@ -16,21 +16,21 @@ namespace FishAlmanac.Ui.Components
 
         //==============================================================================
         private float CurrentScroll { get; set; }
-        
+
         //==============================================================================
         public Scrollbar(IMonitor monitor) : base(monitor)
         {
             CurrentScroll = 0;
-            
+
             Components.Add(new BgBarImage(Monitor));
             Components.Add(new BarImage(Monitor));
         }
-        
+
         //==============================================================================
         public override void Update(Rectangle bounds)
         {
             base.Update(bounds);
-            
+
             PositionBgBar();
             PositionBar();
         }
@@ -41,13 +41,13 @@ namespace FishAlmanac.Ui.Components
             CurrentScroll = current;
             PositionBar();
         }
-        
+
         //==============================================================================
         private void PositionBgBar()
         {
             Components[(int)Indices.BgBar].Update(Bounds);
         }
-        
+
         //==============================================================================
         private void PositionBar()
         {

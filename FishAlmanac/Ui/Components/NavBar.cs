@@ -4,7 +4,6 @@ using FishAlmanac.Ui.Components.Base;
 using FishAlmanac.Ui.Components.Buttons;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
-using StardewValley;
 using InputButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace FishAlmanac.Ui.Components

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FishAlmanac.GameData;
 using FishAlmanac.Ui.Components;
 using FishAlmanac.Ui.Components.Cards;
@@ -98,7 +99,7 @@ namespace FishAlmanac.Ui
         //==============================================================================
         private void CreateCards(Dictionary<Fish, List<Location>> data, Dictionary<int, Bundle> bundles)
         {
-            foreach (var (fish, locations) in data)
+            foreach (var (fish, locations) in data.OrderBy(i => i.Key.Name))
             {
                 if (locations.Count <= 0)
                 {

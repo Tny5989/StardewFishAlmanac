@@ -1,24 +1,23 @@
 ﻿using System.Collections.Generic;
-
 namespace FishAlmanac.GameData
 {
     public class Item
     {
         //==============================================================================
         public int Id { get; }
-        
+
         //==============================================================================
         public string Name { get; }
-        
+
         //==============================================================================
         public string Description { get; }
 
-        
+
         //==============================================================================
         public Item(int id, string data)
         {
             Id = id;
-            
+
             var parts = data.Split('/');
             Name = ParseName(parts);
             Description = ParseDescription(parts);
@@ -42,6 +41,7 @@ namespace FishAlmanac.GameData
             {
                 return true;
             }
+
             if (GetType() != obj.GetType())
             {
                 return false;
@@ -55,7 +55,7 @@ namespace FishAlmanac.GameData
         {
             return data[0];
         }
-        
+
         //==============================================================================
         private static string ParseDescription(IReadOnlyList<string> data)
         {

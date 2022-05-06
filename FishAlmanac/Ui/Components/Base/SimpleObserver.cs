@@ -9,7 +9,7 @@ namespace FishAlmanac.Ui.Components.Base
         protected SimpleObserver(IMonitor monitor) : base(monitor)
         {
         }
-        
+
         //==============================================================================
         public void OnCompleted()
         {

@@ -1,40 +1,44 @@
-﻿using Microsoft.Xna.Framework;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using xTile.ObjectModel;
-using Location = xTile.Dimensions.Location;
 
 namespace FishAlmanac
 {
     public class ModEntry : Mod
     {
         //==============================================================================
+        private const string ConfigModId = "spacechase0.GenericModConfigMenu";
+
+        //==============================================================================
+        private ModConfig Config { get; set; }
+
+        //==============================================================================
         public override void Entry(IModHelper helper)
         {
-            helper.Events.Input.ButtonPressed += OnButtonPressed;
+            Config = Helper.ReadConfig<ModConfig>();
+            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.Input.ButtonsChanged += OnButtonsChanged;
         }
 
         //==============================================================================
-        private void OnButtonPressed(object sender, ButtonPressedEventArgs args)
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs args)
         {
-            if (!Context.IsWorldReady || args.IsSuppressed())
+            var menu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>(ConfigModId);
+            if (menu == null)
             {
                 return;
             }
 
-            if (!args.IsDown(args.Button))
-            {
-                return;
-            }
+            ModConfig.Register(menu, ModManifest, Helper, Config);
+        }
 
-            if (args.Button is SButton.ControllerA)
+        //==============================================================================
+        private void OnButtonsChanged(object sender, ButtonsChangedEventArgs args)
+        {
+            if (Config.ShowUi.JustPressed())
             {
-                HandleAction(GetTileAction(Game1.player.GetGrabTile()));
-            }
-            else if (args.Button is SButton.MouseRight)
-            {
-                HandleAction(GetTileAction(GetCursorGrabTile()));
+                HandleAction("FishAlmanac");
             }
         }
 
@@ -50,32 +54,6 @@ namespace FishAlmanac
             {
                 Game1.activeClickableMenu = new Ui.FishAlmanac(Monitor);
             }
-        }
-
-        //==============================================================================
-        private PropertyValue GetTileAction(Vector2 pos)
-        {
-            if (!Utility.tileWithinRadiusOfPlayer((int)pos.X, (int)pos.Y, 1, Game1.player))
-            {
-                return null;
-            }
-            
-            var loc = new Location((int)pos.X * Game1.tileSize, (int)pos.Y * Game1.tileSize);
-            var tile = Game1.currentLocation.map.GetLayer("Buildings").PickTile(loc, Game1.viewport.Size);
-            if (tile == null)
-            {
-                return null;
-            }
-
-            tile.Properties.TryGetValue("Action", out var action);
-            return action;
-        }
-
-        //==============================================================================
-        private static Vector2 GetCursorGrabTile()
-        {
-            return new Vector2((float)(Game1.getOldMouseX() + Game1.viewport.X),
-                (float)(Game1.getOldMouseY() + Game1.viewport.Y)) / Game1.tileSize;
         }
     }
 }

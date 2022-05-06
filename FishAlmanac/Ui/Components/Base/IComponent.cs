@@ -13,7 +13,7 @@ namespace FishAlmanac.Ui.Components.Base
 
         //==============================================================================
         public void Draw(SpriteBatch b);
-        
+
         //==============================================================================
         public void Update(Rectangle bounds);
 

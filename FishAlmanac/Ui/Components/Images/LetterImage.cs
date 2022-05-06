@@ -9,7 +9,7 @@ namespace FishAlmanac.Ui.Components.Images
     {
         //==============================================================================
         private static Texture2D Texture => Game1.content.Load<Texture2D>("LooseSprites\\letterBG");
-        
+
         //==============================================================================
         private static Rectangle Rectangle => new Rectangle(0, 0, 320, 180);
 
@@ -17,9 +17,8 @@ namespace FishAlmanac.Ui.Components.Images
         //==============================================================================
         public LetterImage(IMonitor monitor) : base(monitor)
         {
-            
         }
-        
+
         //==============================================================================
         protected override Texture2D GetTexture()
         {

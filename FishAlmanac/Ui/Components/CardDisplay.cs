@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using FishAlmanac.Ui.Components.Base;
 using FishAlmanac.Ui.Components.Cards;
 using Microsoft.Xna.Framework;
@@ -79,7 +78,7 @@ namespace FishAlmanac.Ui.Components
             ++Count;
             OnNext("");
         }
-        
+
         //==============================================================================
         public override bool HandleScrollWheel(int direction)
         {

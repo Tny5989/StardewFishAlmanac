@@ -9,7 +9,7 @@ namespace FishAlmanac.Ui.Components.Images
     {
         //==============================================================================
         private static Texture2D Texture => Game1.mouseCursors;
-        
+
         //==============================================================================
         private static Rectangle Rectangle => new Rectangle(435, 463, 6, 10);
 

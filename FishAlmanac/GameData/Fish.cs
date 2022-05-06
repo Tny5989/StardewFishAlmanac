@@ -7,25 +7,25 @@ namespace FishAlmanac.GameData
     {
         //==============================================================================
         public int Id { get; }
-        
+
         //==============================================================================
         public string Name { get; }
-        
+
         //==============================================================================
         public int StartTime { get; }
-        
+
         //==============================================================================
         public int StopTime { get; }
-        
+
         //==============================================================================
         public List<WeatherType> Weathers { get; }
 
-        
+
         //==============================================================================
         public Fish(int id, string data)
         {
             Id = id;
-            
+
             var parts = data.Split('/');
             Name = ParseName(parts);
             (StartTime, StopTime) = ParseTime(parts);
@@ -50,6 +50,7 @@ namespace FishAlmanac.GameData
             {
                 return true;
             }
+
             if (GetType() != obj.GetType())
             {
                 return false;
